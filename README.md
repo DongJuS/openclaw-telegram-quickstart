@@ -85,11 +85,14 @@ cd openclaw-telegram-quickstart
 먼저 로컬에 OpenClaw CLI를 설치하고 ChatGPT OAuth 인증을 완료합니다:
 
 ```bash
-# OpenClaw CLI 설치
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+node --version
 npm install -g openclaw
+which openclaw
+openclaw onboard
 
-# ChatGPT OAuth 로그인 (브라우저가 열립니다)
-openclaw login openai-codex
 ```
 
 브라우저에서 ChatGPT 계정으로 로그인하면 credential이 `~/.openclaw/credentials/`에 저장됩니다.
