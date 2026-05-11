@@ -337,6 +337,12 @@ source .env
 curl "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getMe"
 ```
 
+```
+OPENCLAW : ACCESS NOT CONFIGURED MY USER ID : XXXX PAIRING CODE, ASK THE BOT OWNER TO
+  APPROVE PAIRING APPROVE TELEGRAM ....
+openclaw pairing approve telegram HQMKSTFL
+```
+
 2. 컨테이너 로그 확인:
 ```bash
 docker compose logs --tail 50
