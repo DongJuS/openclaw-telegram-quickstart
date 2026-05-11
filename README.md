@@ -371,6 +371,28 @@ echo "OPENCLAW_PORT=28789" >> .env
 docker compose up -d
 ```
 
+```envDP 토큰을 안넣었을떄.
+  $env:TG_TOKEN="123213:ABCDASDFASDFDAGFAD"
+
+  docker stop openclaw-docker-version
+  docker rm openclaw-docker-version
+
+  docker run -d `
+    --name openclaw-docker-version `
+    -p 127.0.0.1:18789:18789 `
+    -e TELEGRAM_BOT_TOKEN="$env:TG_TOKEN" `
+    -v "C:\Users\didsu\workspace\openclaw:/workspace" `
+    -v "$env:USERPROFILE\.openclaw:/root/.openclaw" `
+    -v "$env:USERPROFILE\.codex:/root/.codex:ro" `
+    openclaw-image `
+    openclaw gateway --port 18789 --bind lan
+
+  바로 확인하려면 이어서 이것도 실행하세요.
+
+  docker exec openclaw-docker-version sh -lc "printenv | grep TELEGRAM"
+  docker logs -f openclaw-docker-version
+```
+
 ### WSL2에서 Telegram 연결 실패
 
 Windows WSL2 환경에서 DNS/IPv6 문제가 발생할 수 있습니다. `.env`에 추가:
