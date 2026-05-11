@@ -123,7 +123,10 @@ cp .env.example .env
 
   auth-profiles.json에는 openai-codex OAuth가 정상으로 들어갔는데, 실제 Codex app-server가 보는 파일은 아
   직 없음:
+openclaw models auth login --provider openai-codex --method device-code --set-default
+  openclaw gateway restart
 
+  openclaw tui
   ~/.openclaw/agents/main/agent/codex-home/auth.json
 
   그래서 OpenClaw 모델 상태는 정상처럼 보이지만, 실행 시점에는 여전히 Failed to extract accountId from
@@ -134,6 +137,9 @@ cp .env.example .env
   mkdir -p ~/.openclaw/agents/main/agent/codex-home
   cp ~/.codex/auth.json ~/.openclaw/agents/main/agent/codex-home/auth.json
   chmod 600 ~/.openclaw/agents/main/agent/codex-home/auth.json
+  openclaw gateway restart
+
+  openclaw tui
 ```
 
 
