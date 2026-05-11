@@ -118,6 +118,24 @@ cp examples/openclaw.chatgpt-oauth.json config/openclaw.json
 ```bash
 cp .env.example .env
 ```
+``` X단계 : 안된다면
+• 지금 원인은 거의 확정이야.
+
+  auth-profiles.json에는 openai-codex OAuth가 정상으로 들어갔는데, 실제 Codex app-server가 보는 파일은 아
+  직 없음:
+
+  ~/.openclaw/agents/main/agent/codex-home/auth.json
+
+  그래서 OpenClaw 모델 상태는 정상처럼 보이지만, 실행 시점에는 여전히 Failed to extract accountId from
+  token이 납니다.
+
+  터미널에서 이거 실행해:
+
+  mkdir -p ~/.openclaw/agents/main/agent/codex-home
+  cp ~/.codex/auth.json ~/.openclaw/agents/main/agent/codex-home/auth.json
+  chmod 600 ~/.openclaw/agents/main/agent/codex-home/auth.json
+```
+
 
 `.env`에서 Telegram 봇 토큰만 수정하세요. **AI API 키는 필요 없습니다:**
 
