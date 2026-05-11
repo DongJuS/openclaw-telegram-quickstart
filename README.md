@@ -123,7 +123,7 @@ cp .env.example .env
 
   auth-profiles.json에는 openai-codex OAuth가 정상으로 들어갔는데, 실제 Codex app-server가 보는 파일은 아
   직 없음:
-openclaw models auth login --provider openai-codex --method device-code --set-default
+  openclaw models auth login --provider openai-codex --method device-code --set-default
   openclaw gateway restart
 
   openclaw tui
@@ -140,6 +140,10 @@ openclaw models auth login --provider openai-codex --method device-code --set-de
   openclaw gateway restart
 
   openclaw tui
+```
+
+```token access json file
+Get-Content $env:USERPROFILE\.openclaw\openclaw.json
 ```
 
 
