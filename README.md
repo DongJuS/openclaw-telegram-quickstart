@@ -284,7 +284,8 @@ sudo systemctl start docker
 
   CMD ["openclaw", "gateway", "--port", "18789", "--bind", "lan"]
   EOF
-
+```
+```
   docker build -t openclaw-image -f docker/openclaw/Dockerfile .
 
   openclaw gateway stop
@@ -296,36 +297,37 @@ sudo systemctl start docker
     -v "/mnt/c/Users/didsu/workspace/openclaw:/workspace" \
     -w /workspace \
     openclaw-image
-
-  인증 파일 복사:
+```
+```인증 파일 복사:
 
   mkdir -p ~/.openclaw/agents/main/agent/codex-home
   cp ~/.codex/auth.json ~/.openclaw/agents/main/agent/codex-home/auth.json
   chmod 600 ~/.openclaw/agents/main/agent/codex-home/auth.json
-
-  컨테이너 안으로 진입:
+```
+  ```컨테이너 안으로 진입:
 
   docker exec -it openclaw-docker-version bash
-
-  컨테이너 안에서 플러그인 설치/복구:
+```
+  ```컨테이너 안에서 플러그인 설치/복구:
 
   apt-get update
   apt-get install -y python3
 
   openclaw plugins install @openclaw/codex --force
-
-  필요 시 반쯤 설치된 폴더 제거 후 재설치:
+```
+  ```필요 시 반쯤 설치된 폴더 제거 후 재설치:
 
   rm -rf /root/.openclaw/npm/node_modules/@openclaw/codex
   openclaw plugins install @openclaw/codex
-
-  소유권 문제 해결:
+```
+  ```소유권 문제 해결:
 
   chown -R root:root /root/.openclaw/npm/node_modules/@openclaw
-
-  플러그인 확인:
+```
+  ```플러그인 확인:
 
   openclaw plugins list
+```
 ```
 
 ### 봇이 메시지에 응답하지 않음
