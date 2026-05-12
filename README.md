@@ -267,7 +267,8 @@ Docker Desktop 앱을 실행하세요. Linux의 경우:
 sudo systemctl start docker
 ```
 
-``` docker에서 실행하기 위해서 진행.
+docker에서 실행하기 위해서 진행.
+``` 
   mkdir -p docker/openclaw
 
   cat > docker/openclaw/Dockerfile <<'EOF'
@@ -298,34 +299,34 @@ sudo systemctl start docker
     -w /workspace \
     openclaw-image
 ```
-```인증 파일 복사:
-
+인증 파일 복사:
+```
   mkdir -p ~/.openclaw/agents/main/agent/codex-home
   cp ~/.codex/auth.json ~/.openclaw/agents/main/agent/codex-home/auth.json
   chmod 600 ~/.openclaw/agents/main/agent/codex-home/auth.json
 ```
-  ```컨테이너 안으로 진입:
-
+ 컨테이너 안으로 진입:
+ ```
   docker exec -it openclaw-docker-version bash
 ```
-  ```컨테이너 안에서 플러그인 설치/복구:
-
+  컨테이너 안에서 플러그인 설치/복구:
+```
   apt-get update
   apt-get install -y python3
 
   openclaw plugins install @openclaw/codex --force
 ```
-  ```필요 시 반쯤 설치된 폴더 제거 후 재설치:
-
+ 필요 시 반쯤 설치된 폴더 제거 후 재설치:
+ ```
   rm -rf /root/.openclaw/npm/node_modules/@openclaw/codex
   openclaw plugins install @openclaw/codex
 ```
-  ```소유권 문제 해결:
-
+ 소유권 문제 해결:
+ ```
   chown -R root:root /root/.openclaw/npm/node_modules/@openclaw
 ```
-  ```플러그인 확인:
-
+ 플러그인 확인:
+ ```
   openclaw plugins list
 ```
 ```
