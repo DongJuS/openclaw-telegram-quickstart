@@ -411,6 +411,25 @@ Windows WSL2 환경에서 DNS/IPv6 문제가 발생할 수 있습니다. `.env`�
 OPENCLAW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY=1
 ```
 
+껐다가 다시 킬 때
+```
+  # 기존 컨테이너 정지 및 삭제
+  docker stop openclaw-docker-version
+  docker rm openclaw-docker-version
+
+  # 다시 실행
+  docker run -d `
+    --name openclaw-docker-version `
+    -p 127.0.0.1:18789:18789 `
+    -e TELEGRAM_BOT_TOKEN="$env:TG_TOKEN" `
+    -v "$env:USERPROFILE\.openclaw:/root/.openclaw" `
+    -v "$env:USERPROFILE\.codex:/root/.codex:ro" `
+
+  # 확인
+  docker logs -f openclaw-docker-version
+
+  어제 어떤 방식으로 돌렸는지 (docker com 
+```
 ## 정리
 
 ```bash
