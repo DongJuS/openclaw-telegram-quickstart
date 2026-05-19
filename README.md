@@ -453,6 +453,149 @@ docker compose down -v
 - [AI 에이전트 커스터마이징](https://docs.openclaw.ai/agents)
 - [GitHub: openclaw/openclaw](https://github.com/openclaw/openclaw)
 
+## Docker Mounting (폴더 제한)
+
+### 배경
+
+Docker 컨테이너가 이미 실행 중인 상태에서, AI가 접근할 수 있는 호스트 폴더 범위를 변경하려면 **마운트(`-v`)를 수정한 뒤 컨테이너를 재생성**하면 됩니다.
+Docker는 실행 중인 컨테이너의 마운트를 동적으로 바꿀 수 없기 때문에, stop → rm → run 순서로 진행합니다.
+
+**핵심:** `-v` 줄만 추가/제거/수정하면 AI가 볼 수 있는 폴더가 바뀜.
+
+### 진행 전 사전 검증
+
+```powershell
+# 마운트할 대상 폴더가 실제로 존재하는지 확인
+Test-Path "C:\Users\didsu\workspace\my-project"
+```
+
+### 방법
+
+#### 마운트 변경 (stop → rm → run)
+
+```powershell
+docker stop openclaw-docker-version
+docker rm openclaw-docker-version
+
+# 아래 -v 줄을 원하는 대로 수정하여 재실행
+docker run -d `
+  --name openclaw-docker-version `
+  -p 127.0.0.1:18789:18789 `
+  -e TELEGRAM_BOT_TOKEN="$env:TG_TOKEN" `
+  -v "$env:USERPROFILE\.openclaw:/root/.openclaw" `
+  -v "$env:USERPROFILE\.codex:/root/.codex:ro" `
+  -v "C:\Users\didsu\workspace\my-project:/workspace" `
+  openclaw-image `
+  openclaw gateway --port 18789 --bind lan
+```
+
+> AI는 `/workspace` (= 호스트의 `C:\Users\didsu\workspace\my-project`)만 접근 가능.
+> 호스트의 다른 폴더는 컨테이너 안에서 보이지 않음.
+
+#### 여러 폴더를 노출
+
+```powershell
+docker run -d `
+  --name openclaw-docker-version `
+  -p 127.0.0.1:18789:18789 `
+  -e TELEGRAM_BOT_TOKEN="$env:TG_TOKEN" `
+  -v "$env:USERPROFILE\.openclaw:/root/.openclaw" `
+  -v "$env:USERPROFILE\.codex:/root/.codex:ro" `
+  -v "C:\Users\didsu\workspace\project-a:/workspace/project-a" `
+  -v "C:\Users\didsu\workspace\project-b:/workspace/project-b" `
+  -v "C:\Users\didsu\Documents\notes:/workspace/notes" `
+  openclaw-image `
+  openclaw gateway --port 18789 --bind lan
+```
+
+> `-v` 줄을 추가/제거하면 AI가 접근할 수 있는 폴더가 바로 변경됨.
+
+#### 특정 폴더를 읽기 전용으로 제한하고 싶을 때
+
+```powershell
+  -v "C:\Users\didsu\workspace\sensitive-docs:/workspace/docs:ro" `
+```
+
+> `:ro`를 붙이면 해당 경로는 읽기만 가능, 쓰기 불가.
+
+#### AI 출력 전용 폴더 (호스트에 빈 폴더 만들어두고 쓰기 허용)
+
+```powershell
+  -v "C:\Users\didsu\workspace\ai-output:/workspace/output" `
+```
+
+> AI가 생성한 파일을 여기에만 쓰도록 유도. 호스트에서 결과물만 꺼내 쓸 수 있음.
+
+#### 특정 파일 하나만 노출
+
+```powershell
+  -v "C:\Users\didsu\workspace\my-project\config.yaml:/workspace/config.yaml:ro" `
+```
+
+> 폴더가 아닌 단일 파일도 마운트 가능. 설정 파일 하나만 보여주고 싶을 때 유용.
+
+#### 바탕화면 등 비개발 폴더 노출
+
+```powershell
+  -v "C:\Users\didsu\Desktop:/workspace/desktop" `
+  -v "C:\Users\didsu\Downloads:/workspace/downloads:ro" `
+```
+
+> 개발 폴더가 아니어도 마운트 가능. Downloads는 읽기 전용으로 두면 안전.
+
+#### 상위 디렉토리 통째로 마운트
+
+```powershell
+  -v "C:\Users\didsu\workspace:/workspace" `
+```
+
+> `workspace` 폴더 전체를 마운트하면 하위의 모든 프로젝트(project-a, project-b, ...)에 AI가 접근 가능.
+> 개별 `-v`를 여러 줄 쓸 필요 없이 한 줄로 해결되지만, 범위가 넓어지므로 주의.
+
+#### 새 디렉토리를 만들어서 마운트 (전용 작업 공간)
+
+```powershell
+# 호스트에서 전용 폴더 생성
+mkdir "C:\Users\didsu\ai-sandbox"
+
+# 해당 폴더만 마운트
+  -v "C:\Users\didsu\ai-sandbox:/workspace" `
+```
+
+> AI 전용 디렉토리를 새로 만들어서 격리. 필요한 파일만 여기에 복사해두면 원본은 안전.
+
+#### 중첩 디렉토리 구조 만들기
+
+```powershell
+  -v "C:\Users\didsu\workspace\frontend:/workspace/repos/frontend" `
+  -v "C:\Users\didsu\workspace\backend:/workspace/repos/backend" `
+  -v "C:\Users\didsu\Documents\specs:/workspace/docs/specs:ro" `
+  -v "C:\Users\didsu\ai-sandbox\output:/workspace/output" `
+```
+
+> 컨테이너 안에서 `/workspace/repos/`, `/workspace/docs/`, `/workspace/output/` 같은 계층 구조가 만들어짐.
+> 호스트에서는 흩어져 있는 폴더들을 컨테이너 안에서 정리된 구조로 보여줄 수 있음.
+
+#### 혼합: 읽기 전용 + 쓰기 가능 조합
+
+```powershell
+  -v "C:\Users\didsu\workspace\source-code:/workspace/src:ro" `
+  -v "C:\Users\didsu\workspace\ai-output:/workspace/output" `
+```
+
+> 소스코드는 읽기만, 결과물은 별도 폴더에 쓰기. AI가 원본을 수정하지 못하게 제한하면서도 작업 결과는 받을 수 있음.
+
+#### 마운트 변경 후 확인
+
+```powershell
+# 컨테이너 안에서 마운트된 경로 확인
+docker exec openclaw-docker-version ls /workspace
+
+# 마운트 밖 경로에 접근 불가능한지 확인
+docker exec openclaw-docker-version ls /home
+# → 비어있거나 존재하지 않음
+```
+
 ## License
 
 MIT
