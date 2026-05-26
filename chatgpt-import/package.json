@@ -1,0 +1,15 @@
+{
+  "name": "chatgpt-import",
+  "version": "1.0.0",
+  "description": "ChatGPT conversations.json parser → OpenClaw-compatible format",
+  "type": "module",
+  "bin": {
+    "chatgpt-import": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js",
+    "test": "node --test src/*.test.js"
+  },
+  "keywords": ["chatgpt", "export", "openclaw", "parser"],
+  "license": "MIT"
+}

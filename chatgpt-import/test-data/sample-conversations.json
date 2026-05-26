@@ -1,0 +1,104 @@
+[
+  {
+    "id": "conv-001",
+    "title": "Docker 컨테이너 네트워킹 질문",
+    "create_time": 1716700800,
+    "update_time": 1716704400,
+    "current_node": "node-4",
+    "mapping": {
+      "node-1": {
+        "id": "node-1",
+        "message": {
+          "id": "msg-1",
+          "author": { "role": "system" },
+          "content": { "content_type": "text", "parts": ["You are ChatGPT."] },
+          "create_time": 1716700800,
+          "metadata": {}
+        },
+        "parent": null,
+        "children": ["node-2"]
+      },
+      "node-2": {
+        "id": "node-2",
+        "message": {
+          "id": "msg-2",
+          "author": { "role": "user" },
+          "content": { "content_type": "text", "parts": ["Docker 컨테이너 간 네트워킹은 어떻게 설정하나요?"] },
+          "create_time": 1716700810,
+          "metadata": {}
+        },
+        "parent": "node-1",
+        "children": ["node-3"]
+      },
+      "node-3": {
+        "id": "node-3",
+        "message": {
+          "id": "msg-3",
+          "author": { "role": "assistant" },
+          "content": { "content_type": "text", "parts": ["Docker 컨테이너 간 네트워킹은 docker network를 통해 설정합니다.\n\n1. 커스텀 네트워크 생성:\n```bash\ndocker network create my-network\n```\n\n2. 컨테이너를 네트워크에 연결:\n```bash\ndocker run --network my-network --name container1 image1\ndocker run --network my-network --name container2 image2\n```\n\n같은 네트워크에 있는 컨테이너들은 컨테이너 이름으로 서로 통신할 수 있습니다."] },
+          "create_time": 1716700820,
+          "metadata": { "model_slug": "gpt-4o" }
+        },
+        "parent": "node-2",
+        "children": ["node-4"]
+      },
+      "node-4": {
+        "id": "node-4",
+        "message": {
+          "id": "msg-4",
+          "author": { "role": "user" },
+          "content": { "content_type": "text", "parts": ["docker-compose에서는 어떻게 하나요?"] },
+          "create_time": 1716700830,
+          "metadata": {}
+        },
+        "parent": "node-3",
+        "children": []
+      }
+    }
+  },
+  {
+    "id": "conv-002",
+    "title": "TypeScript 제네릭 설명",
+    "create_time": 1716787200,
+    "update_time": 1716790800,
+    "current_node": "node-b3",
+    "mapping": {
+      "node-b1": {
+        "id": "node-b1",
+        "message": {
+          "id": "msg-b1",
+          "author": { "role": "system" },
+          "content": { "content_type": "text", "parts": ["You are ChatGPT."] },
+          "create_time": 1716787200,
+          "metadata": {}
+        },
+        "parent": null,
+        "children": ["node-b2"]
+      },
+      "node-b2": {
+        "id": "node-b2",
+        "message": {
+          "id": "msg-b2",
+          "author": { "role": "user" },
+          "content": { "content_type": "text", "parts": ["TypeScript 제네릭을 쉽게 설명해줘"] },
+          "create_time": 1716787210,
+          "metadata": {}
+        },
+        "parent": "node-b1",
+        "children": ["node-b3"]
+      },
+      "node-b3": {
+        "id": "node-b3",
+        "message": {
+          "id": "msg-b3",
+          "author": { "role": "assistant" },
+          "content": { "content_type": "text", "parts": ["제네릭은 타입을 매개변수처럼 사용하는 기능입니다.\n\n```typescript\nfunction identity<T>(arg: T): T {\n  return arg;\n}\n\nconst result = identity<string>('hello');\n```\n\n`T`는 호출 시점에 구체적인 타입으로 대체됩니다. 코드 재사용성과 타입 안전성을 동시에 얻을 수 있습니다."] },
+          "create_time": 1716787220,
+          "metadata": { "model_slug": "gpt-4o" }
+        },
+        "parent": "node-b2",
+        "children": []
+      }
+    }
+  }
+]
